@@ -24,12 +24,13 @@ describe Knight do
   end
 
   describe '#update_legal_targets' do
-    before do
-      let(:board) { double('board') }
-      allow(board).to receive(:state).and_return(Array.new(8) { Array.new(8) })
-    end
-
     context 'when the knight is on an empty board' do
+      let(:board) { double('board') }
+
+      before do
+        allow(board).to receive(:state).and_return(Array.new(8) { Array.new(8) })
+      end
+
       it 'can make all 8 moves from center square e4 (coords 4,3)' do
         knight.move([4, 3])
         knight.update_legal_targets(board)
@@ -57,6 +58,30 @@ describe Knight do
         result = [[1, 6], [1, 2], [2, 5], [2, 3]]
         expect(knight.legal_targets.sort).to eq(result.sort)
       end
+    end
+
+    context 'when some target squares are occupied by own pieces' do
+      let(:board) { double('board') }
+      let(:white_piece) { double(color: 'white') }
+
+      before do
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[1][2] = white_piece
+        allow(board).to receive(:state).and_return(board_state)
+      end
+
+      it 'removes those squares from legal targets' do
+        knight.move([0, 0])
+        knight.update_legal_targets(board)
+        result = [[2, 1]]
+        expect(knight.legal_targets).to eq(result)
+      end
+    end
+    context 'when some target squares are occupied by enemy pieces' do
+      # TODO
+    end
+    context 'when knight is pinned to the king (when moving would result in checking own king)' do
+      # TODO
     end
   end
 end
