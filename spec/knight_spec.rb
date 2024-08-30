@@ -20,4 +20,7 @@ describe Knight do
       expect(knight.relative_moves.sort).to eq(relative_moves.sort)
     end
   end
+
+  describe '#update_legal_targets' do
+  end
 end

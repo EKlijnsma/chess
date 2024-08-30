@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
+
 require_relative '../lib/piece'
 
 describe Piece do
@@ -45,7 +47,8 @@ describe Piece do
     end
   end
 
-  describe '#update_legal_moves' do
+  describe '#update_legal_targets' do
     # is different for every piece, so it is defined in the subclasses
   end
 end
+# rubocop:enable Metrics/BlockLength

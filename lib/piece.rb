@@ -1,7 +1,7 @@
 # frozen_string_literal:true
 
 class Piece
-  attr_reader :id, :color, :symbol, :position, :legal_moves
+  attr_reader :id, :color, :symbol, :position, :legal_targets
 
   # Symbols: ♔	♕	♖	♗	♘	♙	♚	♛	♜	♝	♞	♟
   def initialize(id, color, symbol, position)
@@ -9,7 +9,7 @@ class Piece
     @color = color
     @symbol = symbol
     @position = position
-    @legal_moves = nil
+    @legal_targets = nil
   end
 
   def move(destination)
