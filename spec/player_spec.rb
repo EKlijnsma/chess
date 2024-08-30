@@ -28,36 +28,100 @@ describe Player do
   describe '#enter_move' do
     let(:board) { double('board') }
 
-    before do
-      allow(player).to receive(:select_piece).and_return('e2')
-      allow(player).to receive(:select_destination).and_return('e4')
-      allow(board).to receive(:validate_selection).and_return(true)
-      allow(board).to receive(:validate_destination).and_return(true)
-      allow(player).to receive(:board).and_return(board)
+    context 'when given valid inputs' do
+      before do
+        allow(player).to receive(:select_piece).and_return('e2')
+        allow(player).to receive(:select_destination).and_return('e4')
+        allow(board).to receive(:validate_selection).and_return(true)
+        allow(board).to receive(:validate_destination).and_return(true)
+        allow(player).to receive(:board).and_return(board)
+      end
+
+      it 'prompts for piece selection' do
+        expect(player).to receive(:select_piece)
+        player.enter_move
+      end
+
+      it 'prompts for destination selection' do
+        expect(player).to receive(:select_destination)
+        player.enter_move
+      end
+
+      it 'delegates validation of piece selection to the board class' do
+        expect(board).to receive(:validate_selection).with('e2', player.color)
+        player.enter_move
+      end
+
+      it 'delegates validation of destination to the board class' do
+        expect(board).to receive(:validate_destination).with('e2', 'e4')
+        player.enter_move
+      end
+
+      it 'returns a valid move' do
+        expect(player.enter_move).to eq(%w[e2 e4])
+      end
     end
 
-    it 'prompts for piece selection' do
-      expect(player).to receive(:select_piece)
-      player.enter_move
+    context 'when piece selection is cancelled' do
+      before do
+        allow(player).to receive(:select_piece).and_return('a2', 'e2')
+        allow(board).to receive(:validate_selection).and_return(true, true)
+        allow(player).to receive(:select_destination).and_return('cancel', 'e4')
+        allow(board).to receive(:validate_destination).and_return(true)
+        allow(player).to receive(:board).and_return(board)
+      end
+
+      it 'prompts for piece selection twice' do
+        expect(player).to receive(:select_piece).twice
+        player.enter_move
+      end
+
+      it 'receives a "cancel" as input once, and then a valid destination' do
+        expect(player).to receive(:select_destination).and_return('cancel', 'e4')
+        player.enter_move
+      end
+
+      it 'returns the intended move' do
+        expect(player.enter_move).to eq(%w[e2 e4])
+      end
     end
 
-    it 'prompts for destination selection' do
-      expect(player).to receive(:select_destination)
-      player.enter_move
+    context 'when piece selection is invalid' do
+      before do
+        allow(player).to receive(:select_piece).and_return('invalid', 'e2')
+        allow(board).to receive(:validate_selection).and_return(false, true)
+        allow(player).to receive(:select_destination).and_return('e4')
+        allow(board).to receive(:validate_destination).and_return(true)
+        allow(player).to receive(:board).and_return(board)
+      end
+
+      it 'prompts for piece selection until valid input is received' do
+        expect(player).to receive(:select_piece).twice
+        player.enter_move
+      end
+
+      it 'returns the valid move' do
+        expect(player.enter_move).to eq(%w[e2 e4])
+      end
     end
 
-    it 'delegates validation of piece selection to the board class' do
-      expect(board).to receive(:validate_selection).with('e2', player.color)
-      player.enter_move
-    end
+    context 'when destination selection is invalid' do
+      before do
+        allow(player).to receive(:select_piece).and_return('e2')
+        allow(board).to receive(:validate_selection).and_return(true)
+        allow(player).to receive(:select_destination).and_return('invalid', 'e4')
+        allow(board).to receive(:validate_destination).and_return(false, true)
+        allow(player).to receive(:board).and_return(board)
+      end
 
-    it 'delegates validation of destination to the board class' do
-      expect(board).to receive(:validate_destination).with('e2', 'e4')
-      player.enter_move
-    end
+      it 'prompts for destination selection until valid input is received' do
+        expect(player).to receive(:select_destination).twice
+        player.enter_move
+      end
 
-    it 'returns a valid move' do
-      expect(player.enter_move).to eq(%w[e2 e4])
+      it 'returns the valid move' do
+        expect(player.enter_move).to eq(%w[e2 e4])
+      end
     end
   end
 end
