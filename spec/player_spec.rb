@@ -26,46 +26,38 @@ describe Player do
   end
 
   describe '#enter_move' do
-    context 'when valid input is given' do
-      before do
-        allow(player).to receive(:prompt_for_input).and_return('e5')
-        allow(player).to receive(:validate_input).and_return(true)
-      end
+    let(:board) { double('board') }
 
-      it 'prompts for input once' do
-        expect(player).to receive(:prompt_for_input).once
-        player.enter_move
-      end
-
-      it 'validates given input' do
-        expect(player).to receive(:validate_input)
-        player.enter_move
-      end
-
-      it 'returns valid input' do
-        expect(player.enter_move).to eq('e5')
-      end
+    before do
+      allow(player).to receive(:select_piece).and_return('e2')
+      allow(player).to receive(:select_destination).and_return('e4')
+      allow(board).to receive(:validate_selection).and_return(true)
+      allow(board).to receive(:validate_destination).and_return(true)
+      allow(player).to receive(:board).and_return(board)
     end
 
-    context 'when invalid input is given twice' do
-      before do
-        allow(player).to receive(:prompt_for_input).and_return('q16', 'string', 'e5')
-        allow(player).to receive(:validate_input).and_return(false, false, true)
-      end
+    it 'prompts for piece selection' do
+      expect(player).to receive(:select_piece)
+      player.enter_move
+    end
 
-      it 'prompts for input 3 times' do
-        expect(player).to receive(:prompt_for_input).exactly(3).times
-        player.enter_move
-      end
+    it 'prompts for destination selection' do
+      expect(player).to receive(:select_destination)
+      player.enter_move
+    end
 
-      it 'validates given input 3 times' do
-        expect(player).to receive(:validate_input).exactly(3).times
-        player.enter_move
-      end
+    it 'delegates validation of piece selection to the board class' do
+      expect(board).to receive(:validate_selection).with('e2', player.color)
+      player.enter_move
+    end
 
-      it 'returns the valid input' do
-        expect(player.enter_move).to eq('e5')
-      end
+    it 'delegates validation of destination to the board class' do
+      expect(board).to receive(:validate_destination).with('e2', 'e4')
+      player.enter_move
+    end
+
+    it 'returns a valid move' do
+      expect(player.enter_move).to eq(%w[e2 e4])
     end
   end
 end
