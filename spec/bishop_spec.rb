@@ -81,16 +81,18 @@ describe Bishop do
           diagonal_targets = bishop.legal_targets[:up_left] + bishop.legal_targets[:down_right]
           diagonal = [[0, 7], [1, 6], [2, 5], [3, 4], [5, 2], [6, 1], [7, 0]]
           expect(diagonal).to include(*diagonal_targets)
+          expect(diagonal_targets.size).to eq(7)
         end
 
         it 'can make moves to all squares on the b2-h7 diagonal' do
           diagonal_targets = bishop.legal_targets[:up_right] + bishop.legal_targets[:down_left]
           diagonal = [[1, 0], [2, 1], [3, 2], [5, 4], [6, 5], [7, 6]]
           expect(diagonal).to include(*diagonal_targets)
+          expect(diagonal_targets.size).to eq(6)
         end
 
         it 'has a total of 13 legal target squares' do
-          targets = bishop.legal_targets.values.flatten
+          targets = bishop.legal_targets.values.flatten(1)
           expect(targets.size).to eq(13)
         end
       end
@@ -110,7 +112,7 @@ describe Bishop do
         board_state[1][3] = white_piece
         allow(board).to receive(:state).and_return(board_state)
         bishop.update_legal_targets(board)
-        moves = bishop.legal_targets.values.flatten
+        moves = bishop.legal_targets.values.flatten(1)
         expect(moves.size).to eq(0)
       end
 
@@ -119,7 +121,7 @@ describe Bishop do
         board_state[2][4] = white_piece
         allow(board).to receive(:state).and_return(board_state)
         bishop.update_legal_targets(board)
-        expect(bishop.legal_targets[:up_right].size).to eq(2)
+        expect(bishop.legal_targets[:up_right].size).to eq(1)
       end
 
       it 'can move on its diagonal in 2 directions until blocked by an own piece' do
@@ -142,7 +144,7 @@ describe Bishop do
         board_state[2][6] = white_piece
         allow(board).to receive(:state).and_return(board_state)
         bishop.update_legal_targets(board)
-        targets = bishop.legal_targets.values.flatten
+        targets = bishop.legal_targets.values.flatten(1)
         expect(targets.size).to eq(5)
       end
     end
@@ -160,7 +162,7 @@ describe Bishop do
         board_state[2][4] = black_piece
         allow(board).to receive(:state).and_return(board_state)
         bishop.update_legal_targets(board)
-        expect(bishop.legal_targets[:up_right].size).to eq(3)
+        expect(bishop.legal_targets[:up_right].size).to eq(2)
       end
 
       it 'can move on its diagonal in 2 directions until (and including) enemy square' do
@@ -183,7 +185,7 @@ describe Bishop do
         board_state[2][6] = black_piece
         allow(board).to receive(:state).and_return(board_state)
         bishop.update_legal_targets(board)
-        targets = bishop.legal_targets.values.flatten
+        targets = bishop.legal_targets.values.flatten(1)
         expect(targets.size).to eq(9)
       end
     end
