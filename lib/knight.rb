@@ -10,6 +10,7 @@ class Knight < Piece
     @relative_moves = [[1, 2], [1, -2], [-1, 2], [-1, -2], [2, 1], [2, -1], [-2, 1], [-2, -1]]
   end
 
+  # refactor to Piece Class later
   def update_legal_targets(board)
     targets = generate_on_board_targets
     @legal_targets = exclude_own_piece_positions(targets, board)

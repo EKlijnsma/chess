@@ -96,8 +96,21 @@ describe Knight do
         expect(knight.legal_targets).to eq(result)
       end
     end
-    context 'when knight is pinned to the king (when moving would result in checking own king)' do
-      # TODO
+
+    context 'when knight is pinned to the king (when moving would result in checking own king' do
+      xit 'does not have any legal targets' do
+        # TODO
+      end
+    end
+
+    context 'when kind is in check' do
+      xit 'a target that gets the king out of check is legal' do
+        # TODO
+      end
+
+      xit 'a target that does not get the king out of check is not legal' do
+        # TODO
+      end
     end
   end
 end
