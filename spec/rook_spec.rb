@@ -9,7 +9,12 @@ describe Rook do
   let(:color) { 'white' }
   let(:symbol) { '♜' }
   let(:position) { [0, 0] }
-  let(:relative_moves) { (1..7).flat_map { |i| [[0, i], [0, -i], [i, 0], [-i, 0]] } }
+  let(:relative_moves) do
+    { up: [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]],
+      down: [[0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6], [0, -7]],
+      right: [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]],
+      left: [[-1, 0], [-2, 0], [-3, 0], [-4, 0], [-5, 0], [-6, 0], [-7, 0]] }
+  end
 
   subject(:rook) { described_class.new(id, color, symbol, position) }
 
@@ -18,8 +23,19 @@ describe Rook do
       expect(rook).to be_a(Piece)
     end
 
-    it 'holds the correct array of relative moves' do
-      expect(rook.relative_moves.sort).to eq(relative_moves.sort)
+    context 'when initialized' do
+      it 'holds the correct array of moves in the up-direction' do
+        expect(rook.relative_moves[:up].sort).to eq(relative_moves[:up].sort)
+      end
+      it 'holds the correct array of moves in the down-direction' do
+        expect(rook.relative_moves[:down].sort).to eq(relative_moves[:down].sort)
+      end
+      it 'holds the correct array of moves in the left-direction' do
+        expect(rook.relative_moves[:left].sort).to eq(relative_moves[:left].sort)
+      end
+      it 'holds the correct array of moves in the right-direction' do
+        expect(rook.relative_moves[:right].sort).to eq(relative_moves[:right].sort)
+      end
     end
   end
 
@@ -39,12 +55,12 @@ describe Rook do
 
         it 'can make moves to all squares on the "a-file"' do
           file_a = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]]
-          expect(rook.legal_targets).to include(*file_a)
+          expect(rook.legal_targets[:up]).to include(*file_a)
         end
 
         it 'can make moves to all squares on the "1st rank"' do
           rank1 = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]]
-          expect(rook.legal_targets).to include(*rank1)
+          expect(rook.legal_targets[:right]).to include(*rank1)
         end
       end
 
@@ -54,14 +70,16 @@ describe Rook do
           rook.update_legal_targets(board)
         end
 
-        it 'can make moves to all squares on the "a-file"' do
-          file_a = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]]
-          expect(rook.legal_targets).to include(*file_a)
+        it 'can make moves to all squares on the "h-file"' do
+          file = rook.legal_targets[:up] + rook.legal_targets[:down]
+          file_h = [[7, 0], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6]]
+          expect(file).to include(*file_h)
         end
 
-        it 'can make moves to all squares on the "1st rank"' do
-          rank1 = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]]
-          expect(rook.legal_targets).to include(*rank1)
+        it 'can make moves to all squares on the "8th rank"' do
+          rank = rook.legal_targets[:left] + rook.legal_targets[:right]
+          rank8 = [[0, 7], [1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7]]
+          expect(rank).to include(*rank8)
         end
       end
 
@@ -72,18 +90,20 @@ describe Rook do
         end
 
         it 'can make moves to all squares on the "e-file"' do
-          file_e = [[4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]]
-          expect(rook.legal_targets).to include(*file_e)
+          file = rook.legal_targets[:up] + rook.legal_targets[:down]
+          file_e = [[4, 0], [4, 1], [4, 2], [4, 4], [4, 5], [4, 6], [4, 7]]
+          expect(file).to include(*file_e)
         end
 
         it 'can make moves to all squares on the "4th rank"' do
-          rank4 = [[1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3]]
-          expect(rook.legal_targets).to include(*rank4)
+          rank = rook.legal_targets[:left] + rook.legal_targets[:right]
+          rank4 = [[0, 3], [1, 3], [2, 3], [3, 3], [5, 3], [6, 3], [7, 3]]
+          expect(rank).to include(*rank4)
         end
       end
     end
 
-    context 'when some target squares are occupied by own pieces' do
+    context 'when some squares are occupied by own pieces' do
       let(:board) { double('board') }
       let(:white_piece) { double(color: 'white') }
 
