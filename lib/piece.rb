@@ -53,7 +53,7 @@ class Piece
         i = squares_states.index(first_piece)
         # if piece has the same color, only take the squares before it
         # if piece has enemy color, take the squares before it, and the pieces' square included
-        slice = (first_piece.color == color ? squares[0..i - 1] : squares[0..i])
+        slice = (first_piece.color == color ? squares[0...i] : squares[0..i])
         moves[direction] = slice
       end
     end

@@ -103,40 +103,111 @@ describe Rook do
       end
     end
 
-    context 'when some squares are occupied by own pieces' do
+    context 'when blocked by own pieces' do
       let(:board) { double('board') }
       let(:white_piece) { double(color: 'white') }
 
       before do
-        board_state = Array.new(8) { Array.new(8) }
-        board_state[1][2] = white_piece
-        allow(board).to receive(:state).and_return(board_state)
+        rook.move([0, 0])
       end
 
-      xit 'removes those squares from legal targets' do
-        rook.move([0, 0])
+      it 'has no legal moves in starting position' do
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[0][1] = white_piece
+        board_state[1][0] = white_piece
+        allow(board).to receive(:state).and_return(board_state)
         rook.update_legal_targets(board)
-        result = [[2, 1]]
-        expect(rook.legal_targets).to eq(result)
+        moves = rook.legal_targets.values.flatten
+        expect(moves.size).to eq(0)
+      end
+
+      it 'can move on its rank in 1 direction until blocked by an own piece' do
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[4][0] = white_piece
+        allow(board).to receive(:state).and_return(board_state)
+        rook.update_legal_targets(board)
+        rank = rook.legal_targets[:left] + rook.legal_targets[:right]
+        expect(rank.size).to eq(3)
+      end
+
+      it 'can move on its file in 1 direction until blocked by an own piece' do
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[0][5] = white_piece
+        allow(board).to receive(:state).and_return(board_state)
+        rook.update_legal_targets(board)
+        file = rook.legal_targets[:up] + rook.legal_targets[:down]
+        expect(file.size).to eq(4)
+      end
+
+      it 'can move on its rank in 2 directions until blocked by an own piece' do
+        rook.move([4, 4])
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[6][4] = white_piece
+        board_state[1][4] = white_piece
+        allow(board).to receive(:state).and_return(board_state)
+        rook.update_legal_targets(board)
+        rank = rook.legal_targets[:left] + rook.legal_targets[:right]
+        expect(rank.size).to eq(3)
+      end
+
+      it 'can move on its file in 2 directions until blocked by an own piece' do
+        rook.move([4, 4])
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[4][0] = white_piece
+        board_state[4][7] = white_piece
+        allow(board).to receive(:state).and_return(board_state)
+        rook.update_legal_targets(board)
+        file = rook.legal_targets[:up] + rook.legal_targets[:down]
+        expect(file.size).to eq(5)
       end
     end
 
-    context 'when some target squares are occupied by enemy pieces' do
+    context 'when facing an enemy piece' do
       let(:board) { double('board') }
-      let(:white_piece) { double(color: 'white') }
       let(:black_piece) { double(color: 'black') }
 
       before do
-        board_state = Array.new(8) { Array.new(8) }
-        board_state[1][2] = white_piece
-        board_state[2][1] = black_piece
-        allow(board).to receive(:state).and_return(board_state)
-      end
-      xit 'still sees those squares as legal targets' do
         rook.move([0, 0])
+      end
+
+      it 'can move on its rank in 1 direction until (and including) the enemy piece\'s squares' do
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[4][0] = black_piece
+        allow(board).to receive(:state).and_return(board_state)
         rook.update_legal_targets(board)
-        result = [[2, 1]]
-        expect(rook.legal_targets).to eq(result)
+        rank = rook.legal_targets[:left] + rook.legal_targets[:right]
+        expect(rank.size).to eq(4)
+      end
+
+      it 'can move on its file in 1 direction until (and including) the enemy piece\'s squares' do
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[0][5] = black_piece
+        allow(board).to receive(:state).and_return(board_state)
+        rook.update_legal_targets(board)
+        file = rook.legal_targets[:up] + rook.legal_targets[:down]
+        expect(file.size).to eq(5)
+      end
+
+      it 'can move on its rank in 2 directions until (and including) the enemy piece\'s squares' do
+        rook.move([4, 4])
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[7][4] = black_piece
+        board_state[0][4] = black_piece
+        allow(board).to receive(:state).and_return(board_state)
+        rook.update_legal_targets(board)
+        rank = rook.legal_targets[:left] + rook.legal_targets[:right]
+        expect(rank.size).to eq(7)
+      end
+
+      it 'can move on its file in 2 directions until (and including) the enemy piece\'s squares' do
+        rook.move([4, 4])
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[4][5] = black_piece
+        board_state[4][2] = black_piece
+        allow(board).to receive(:state).and_return(board_state)
+        rook.update_legal_targets(board)
+        file = rook.legal_targets[:up] + rook.legal_targets[:down]
+        expect(file.size).to eq(3)
       end
     end
 
