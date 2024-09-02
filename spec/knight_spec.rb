@@ -77,8 +77,24 @@ describe Knight do
         expect(knight.legal_targets).to eq(result)
       end
     end
+
     context 'when some target squares are occupied by enemy pieces' do
-      # TODO
+      let(:board) { double('board') }
+      let(:white_piece) { double(color: 'white') }
+      let(:black_piece) { double(color: 'black') }
+
+      before do
+        board_state = Array.new(8) { Array.new(8) }
+        board_state[1][2] = white_piece
+        board_state[2][1] = black_piece
+        allow(board).to receive(:state).and_return(board_state)
+      end
+      it 'still sees those squares as legal targets' do
+        knight.move([0, 0])
+        knight.update_legal_targets(board)
+        result = [[2, 1]]
+        expect(knight.legal_targets).to eq(result)
+      end
     end
     context 'when knight is pinned to the king (when moving would result in checking own king)' do
       # TODO
