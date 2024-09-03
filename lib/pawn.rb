@@ -35,4 +35,25 @@ class Pawn < Piece
     end
     moves
   end
+
+  def account_for_pieces(targets, board)
+    moves = {}
+    targets.each do |direction, squares|
+      # Get the actual state (content) of the board at all squares
+      squares_states = squares.map { |square| board.state[square[0]][square[1]] }
+
+      # Set moves
+      moves[direction] =
+        (direction == :up ? get_upward_moves(direction, squares) : get_diagonal_moves(direction, squares))
+    end
+    moves
+  end
+
+  def get_upward_moves(direction, squares)
+    # TODO, returns moves or empty array when no moves
+  end
+
+  def get_diagonal_moves(direction, squares)
+    # TODO, returns moves or empty array when no moves
+  end
 end

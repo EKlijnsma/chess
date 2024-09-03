@@ -92,32 +92,40 @@ describe Pawn do
     context 'when in position for en passant' do
       context 'when playing with white' do
         xit 'can make an en passant capture if the enemy pawn came from starting position' do
+          # TODO
         end
 
         xit 'can not make an en passant capture if the enemy pawn did not come from starting position' do
+          # TODO
         end
       end
 
       context 'when playing with black' do
         xit 'can make an en passant capture if the enemy pawn came from starting position' do
+          # TODO
         end
 
         xit 'can not make an en passant capture if the enemy pawn did not come from starting position' do
+          # TODO
         end
       end
     end
 
     context 'when reaching the opposite end of the board' do
       xit 'gets promoted to another piece' do
+        # TODO
       end
 
       xit 'prompts for what piece to promote to' do
+        # TODO
       end
 
       xit 'creates a new instance of the chosen piece' do
+        # TODO
       end
 
       xit 'it removes the pawn from the board' do
+        # TODO
       end
     end
 
