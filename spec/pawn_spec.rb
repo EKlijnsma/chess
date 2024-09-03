@@ -22,15 +22,15 @@ describe Pawn do
 
     context 'when initialized' do
       it 'holds the correct array of moves in the up-direction' do
-        expect(queen.relative_moves[:up].sort).to eq(relative_moves[:up].sort)
+        expect(pawn.relative_moves[:up].sort).to eq(relative_moves[:up].sort)
       end
 
       it 'holds the correct array of moves in the up-right-direction' do
-        expect(queen.relative_moves[:up_right].sort).to eq(relative_moves[:up_right].sort)
+        expect(pawn.relative_moves[:up_right].sort).to eq(relative_moves[:up_right].sort)
       end
 
       it 'holds the correct array of moves in the up-left-direction' do
-        expect(queen.relative_moves[:up_left].sort).to eq(relative_moves[:up_left].sort)
+        expect(pawn.relative_moves[:up_left].sort).to eq(relative_moves[:up_left].sort)
       end
     end
   end
@@ -49,7 +49,7 @@ describe Pawn do
     context 'when in starting position' do
       it 'has the option to move up by 1 or by 2 squares' do
         pawn.move([3, 1])
-        pawn.update_legal_targets
+        pawn.update_legal_targets(board)
         legal = [[3, 2], [3, 3]]
         expect(pawn.legal_targets.values.flatten(1).sort).to eq(legal.sort)
       end
@@ -57,7 +57,7 @@ describe Pawn do
 
     context 'when no longer in starting position' do
       it 'can only move up by 1 square' do
-        pawn.update_legal_targets
+        pawn.update_legal_targets(board)
         legal = [[3, 4]]
         expect(pawn.legal_targets.values.flatten(1).sort).to eq(legal.sort)
       end
@@ -66,7 +66,7 @@ describe Pawn do
     context 'when blocked by an own piece on the same file' do
       it 'cannot move in the up-direction' do
         board_state[3][4] = white_piece
-        pawn.update_legal_targets
+        pawn.update_legal_targets(board)
         expect(pawn.legal_targets.values.flatten(1).size).to eq(0)
       end
     end
@@ -74,7 +74,7 @@ describe Pawn do
     context 'when blocked by an opponent on the same file' do
       it 'cannot move in the up-direction' do
         board_state[3][4] = black_piece
-        pawn.update_legal_targets
+        pawn.update_legal_targets(board)
         expect(pawn.legal_targets.values.flatten(1).size).to eq(0)
       end
     end
@@ -83,7 +83,7 @@ describe Pawn do
       it 'has the option to move (capture) diagonally' do
         board_state[2][4] = black_piece
         board_state[4][4] = black_piece
-        pawn.update_legal_targets
+        pawn.update_legal_targets(board)
         legal = [[2, 4], [4, 4]]
         expect(pawn.legal_targets.values.flatten(1)).to include(*legal)
       end
