@@ -233,49 +233,49 @@ describe Queen do
       it 'can move in the up direction until (and including) an enemy pieces\'s square' do
         board_state[3][5] = black_piece
         queen.update_legal_targets(board)
-        expect(queen.legal_targets[:up].size).to eq(1)
+        expect(queen.legal_targets[:up].size).to eq(2)
       end
 
       it 'can move in the up-right direction until (and including) an enemy pieces\'s square' do
         board_state[5][5] = black_piece
         queen.update_legal_targets(board)
-        expect(queen.legal_targets[:up_right].size).to eq(1)
+        expect(queen.legal_targets[:up_right].size).to eq(2)
       end
 
       it 'can move in the right direction until (and including) an enemy pieces\'s square' do
         board_state[5][3] = black_piece
         queen.update_legal_targets(board)
-        expect(queen.legal_targets[:right].size).to eq(1)
+        expect(queen.legal_targets[:right].size).to eq(2)
       end
 
       it 'can move in the down-right direction until (and including) an enemy pieces\'s square' do
         board_state[5][1] = black_piece
         queen.update_legal_targets(board)
-        expect(queen.legal_targets[:down_right].size).to eq(1)
+        expect(queen.legal_targets[:down_right].size).to eq(2)
       end
 
       it 'can move in the down direction until (and including) an enemy pieces\'s square' do
         board_state[3][1] = black_piece
         queen.update_legal_targets(board)
-        expect(queen.legal_targets[:down].size).to eq(1)
+        expect(queen.legal_targets[:down].size).to eq(2)
       end
 
       it 'can move in the down-left direction until (and including) an enemy pieces\'s square' do
         board_state[1][1] = black_piece
         queen.update_legal_targets(board)
-        expect(queen.legal_targets[:down_left].size).to eq(1)
+        expect(queen.legal_targets[:down_left].size).to eq(2)
       end
 
       it 'can move in the left direction until (and including) an enemy pieces\'s square' do
         board_state[1][3] = black_piece
         queen.update_legal_targets(board)
-        expect(queen.legal_targets[:left].size).to eq(1)
+        expect(queen.legal_targets[:left].size).to eq(2)
       end
 
       it 'can move in the up-left direction until (and including) an enemy pieces\'s square' do
         board_state[1][5] = black_piece
         queen.update_legal_targets(board)
-        expect(queen.legal_targets[:up_left].size).to eq(1)
+        expect(queen.legal_targets[:up_left].size).to eq(2)
       end
     end
 
