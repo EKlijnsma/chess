@@ -1,0 +1,26 @@
+Determine check
+Let the Board class detect check conditions by seeing if king.position appears in opposite color's legal moves.
+If it does, set @white_in_check or @black_in_check to true in the Board class. 
+
+Prevent king from moving to attacked squares
+Similarly, when updating the kings legal moves, check for each square if it appears in the opposite color's legal moves. 
+If it does, the square is under attack and the king can not move there.
+
+--- to facilitate both these actions, make a method in the Board class #attacked_by(square, color)
+--- that returns true if square is under attack by color, and false otherwise.
+
+Legal moves under check
+When under check conditions, the only legal moves are those that get the king out of check. 
+To verify this, simulate the move on a copy of the board: 
+Copy the board state, change it by 'making the move' and if that results in check condition for the own king.
+If it does, it is not a legal move.
+
+Handling pins
+A piece is pinned if it is the only friendly piece in line of an attack. 
+Determine which files, ranks and diagonals to check by looking at the king's position.
+For files and ranks, see if there is an enemy rook or queen. 
+For diagonals, see if there is an enemy bishop or queen. 
+If there is, in both cases, check if there is exactly 1 friendly piece between the king and the attacker. 
+If there is, that piece is pinned and may not move off that line of attack. 
+If the piece is pinned on 2 lines of attack, it means it may not move off both of those lines, which means it must stay on the intersection and has no legal moves.
+
